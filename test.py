@@ -38,7 +38,11 @@ if __name__ == '__main__':
 
     # -------------------------------------------------------
 
-    logger2 = Logger('log2.txt', listener_level=logging.WARNING)
+    logger2 = Logger(
+        'log2.txt', 
+        listener_level=logging.WARNING,
+        format_str='%(levelname)-8s %(asctime)s %(name)s %(message)s'
+    )
     logger2.start()
     
     p = Process(target=add_info_entry, args=(logger2,))
