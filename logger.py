@@ -20,7 +20,8 @@ class Logger(Process):
     def __init__(
             self, 
             filename: str = 'log.txt', 
-            listener_level = logging.DEBUG, 
+            listener_level = logging.DEBUG,
+            format_str: str = '%(asctime)s %(processName)-10s %(name)s %(levelname)-8s %(message)s',
             *args, **kwargs
         ) -> None:
         
@@ -30,6 +31,7 @@ class Logger(Process):
         self.queue = Queue()
         self.stop_evt = Event()
         self.listener_level = listener_level
+        self.format_str = format_str
 
     def configure_listener(self) -> None:
         '''
@@ -38,7 +40,7 @@ class Logger(Process):
         root = logging.getLogger()
         root.setLevel(self.listener_level)
         handler = logging.FileHandler(self.filename, 'w')
-        formatter = logging.Formatter('%(asctime)s %(processName)-10s %(name)s %(levelname)-8s %(message)s')
+        formatter = logging.Formatter(self.format_str)
         handler.setFormatter(formatter)
         handler.setLevel(self.listener_level)
         root.addHandler(handler)
