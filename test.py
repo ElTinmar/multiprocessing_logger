@@ -5,14 +5,16 @@ from multiprocessing import Process
 def add_info_entry(logger: Logger):
     logger.configure_emitter()
     local_logger = logger.get_logger('here')
-    local_logger.log(logger.INFO, 'log entry')
+    local_logger.info('log entry')
 
 def add_debug_entry(logger: Logger):
     logger.configure_emitter()
     local_logger = logger.get_logger('there')
-    local_logger.log(logger.DEBUG, 'other log entry')
+    local_logger.debug('other log entry')
 
 if __name__ == '__main__':
+
+    # -------------------------------------------------------
 
     logger = Logger()
     logger.start()

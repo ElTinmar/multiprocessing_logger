@@ -2,10 +2,12 @@ import logging
 import logging.handlers
 from multiprocessing import Process, Queue, Event
 from queue import Empty
+
 class Logger(Process):
     '''
     Simple multiprocessing logger class to handle logging from multiple processes to the same 
-    log file. The logger objects needs to be handed to each process that wants to log to the file.
+    log file using a multiprocessing Queue. 
+    The logger objects needs to be handed to each process that wants to log to the file.
     '''
 
     NOTSET = logging.NOTSET
@@ -15,8 +17,15 @@ class Logger(Process):
     ERROR = logging.ERROR
     CRITICAL = logging.CRITICAL
 
-    def __init__(self, filename: str = 'log.txt', listener_level = logging.DEBUG, *args, **kwargs):
+    def __init__(
+            self, 
+            filename: str = 'log.txt', 
+            listener_level = logging.DEBUG, 
+            *args, **kwargs
+        ) -> None:
+        
         super().__init__(*args, **kwargs)
+        
         self.filename = filename
         self.queue = Queue()
         self.stop_evt = Event()
@@ -27,18 +36,20 @@ class Logger(Process):
         Configure root logger for the listener process
         '''
         root = logging.getLogger()
+        root.setLevel(self.listener_level)
         handler = logging.FileHandler(self.filename, 'w')
         formatter = logging.Formatter('%(asctime)s %(processName)-10s %(name)s %(levelname)-8s %(message)s')
         handler.setFormatter(formatter)
+        handler.setLevel(self.listener_level)
         root.addHandler(handler)
-        root.setLevel(self.listener_level)
-
+        
     def configure_emitter(self, level = logging.DEBUG) -> None:
         '''
         Configure root logger for the emitter process, this needs to be called
         at the beginning of each emitter process
         '''
         handler = logging.handlers.QueueHandler(self.queue)
+        handler.setLevel(level)
         root = logging.getLogger()
         root.addHandler(handler)
         root.setLevel(level)
@@ -49,7 +60,7 @@ class Logger(Process):
         '''
         return logging.getLogger(name)
 
-    def run(self):
+    def run(self) -> None:
         '''
         Listener runs in its own process
         '''
@@ -65,7 +76,7 @@ class Logger(Process):
             except Empty: # should I sleep to avoid CPU usage ?
                 pass
 
-    def stop(self):
+    def stop(self) -> None:
         '''
         Stops listener
         '''
