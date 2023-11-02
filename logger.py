@@ -17,7 +17,7 @@ class Logger(Process):
         handler = logging.FileHandler(self.filename, 'a')
         formatter = logging.Formatter('%(asctime)s %(processName)-10s %(name)s %(levelname)-8s %(message)s')
         handler.setFormatter(formatter)
-        root.addHandler(formatter)
+        root.addHandler(handler)
 
     def configure_emitter(self, level = logging.DEBUG) -> None:
         '''
