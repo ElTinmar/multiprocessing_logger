@@ -4,7 +4,7 @@ from multiprocessing import Process, Queue, Event
 
 class Logger(Process):
     def __init__(self, filename: str = 'log.txt', *args, **kwargs):
-        super.__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.filename = filename
         self.queue = Queue()
         self.stop_evt = Event()
@@ -14,7 +14,7 @@ class Logger(Process):
         Configure root logger for the listener process
         '''
         root = logging.getLogger()
-        handler = logging.handlers.FileHandler(self.filename, 'a')
+        handler = logging.FileHandler(self.filename, 'a')
         formatter = logging.Formatter('%(asctime)s %(processName)-10s %(name)s %(levelname)-8s %(message)s')
         handler.setFormatter(formatter)
         root.addHandler(formatter)
