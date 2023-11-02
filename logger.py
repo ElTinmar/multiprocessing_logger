@@ -3,6 +3,10 @@ import logging.handlers
 from multiprocessing import Process, Queue, Event
 
 class Logger(Process):
+    '''
+    Simple multiprocessing logger class to handle logging from multiple processes to the same 
+    log file. The logger objects needs to be handed to each process that wants to log to the file.
+    '''
 
     NOTSET = logging.NOTSET
     DEBUG = logging.DEBUG
@@ -29,7 +33,8 @@ class Logger(Process):
 
     def configure_emitter(self, level = logging.DEBUG) -> None:
         '''
-        Configure root logger for the emitter process
+        Configure root logger for the emitter process, this needs to be called
+        at the beginning of each emitter process
         '''
         handler = logging.handlers.QueueHandler(self.queue)
         root = logging.getLogger()
@@ -37,9 +42,16 @@ class Logger(Process):
         root.setLevel(level)
 
     def get_logger(self, name: str) -> logging.Logger:
+        '''
+        Returns logger with a specific name
+        '''
         return logging.getLogger(name)
 
     def run(self):
+        '''
+        Listener runs in its own process
+        '''
+
         self.configure_listener()
         while not self.stop_evt.is_set():
             record = self.queue.get()
@@ -49,4 +61,7 @@ class Logger(Process):
             logger.handle(record)
 
     def stop(self):
+        '''
+        Stops listener
+        '''
         self.stop_evt.set()
