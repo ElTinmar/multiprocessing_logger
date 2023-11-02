@@ -3,6 +3,14 @@ import logging.handlers
 from multiprocessing import Process, Queue, Event
 
 class Logger(Process):
+
+    NOTSET = logging.NOTSET
+    DEBUG = logging.DEBUG
+    INFO = logging.INFO
+    WARNING = logging.WARNING
+    ERROR = logging.ERROR
+    CRITICAL = logging.CRITICAL
+
     def __init__(self, filename: str = 'log.txt', *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.filename = filename
