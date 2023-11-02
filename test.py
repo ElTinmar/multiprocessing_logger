@@ -1,5 +1,4 @@
 from logger import Logger
-import logging
 from multiprocessing import Process
 
 def add_info_entry(logger: Logger):
@@ -40,7 +39,7 @@ if __name__ == '__main__':
 
     logger2 = Logger(
         'log2.txt', 
-        listener_level=logging.WARNING,
+        listener_level=Logger.WARNING,
         format_str='%(levelname)-8s %(asctime)s %(name)s %(message)s'
     )
     logger2.start()
