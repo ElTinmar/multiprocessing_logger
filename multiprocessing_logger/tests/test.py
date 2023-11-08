@@ -1,4 +1,4 @@
-from logger import Logger
+from multiprocessing_logger.logger import Logger
 from multiprocessing import Process
 
 def add_info_entry(logger: Logger):
