@@ -37,7 +37,7 @@ class Logger(Process):
         '''
         Configure root logger for the listener process
         '''
-        root = logging.getLogger(self.filename)
+        root = logging.getLogger()
         root.setLevel(self.listener_level)
         handler = logging.FileHandler(self.filename, 'w')
         formatter = logging.Formatter(self.format_str)
@@ -52,7 +52,7 @@ class Logger(Process):
         '''
         handler = logging.handlers.QueueHandler(self.queue)
         handler.setLevel(level)
-        root = logging.getLogger(self.filename)
+        root = logging.getLogger()
         root.addHandler(handler)
         root.setLevel(level)
 
@@ -60,7 +60,7 @@ class Logger(Process):
         '''
         Returns logger with a specific name
         '''
-        return logging.getLogger(name)
+        return logging.getLogger(f'{self.filename}.{name}')
 
     def run(self) -> None:
         '''
