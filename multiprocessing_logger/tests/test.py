@@ -18,13 +18,33 @@ def add_warning_entry(logger: Logger):
 
 if __name__ == '__main__':
 
-    # -------------------------------------------------------
 
     logger = Logger()
     logger.start()
+
+    logger2 = Logger(
+        'log2.txt', 
+        listener_level=Logger.WARNING,
+        format_str='%(levelname)-8s %(asctime)s %(name)s %(message)s'
+    )
+    logger2.start()
+
+    # -------------------------------------------------------
     
     p = Process(target=add_info_entry, args=(logger,))
     p0 = Process(target=add_debug_entry, args=(logger,))
+    p1 = Process(target=add_warning_entry, args=(logger2,))
+    p1.start()
+    p0.start()
+    p.start()
+    p.join()
+    p0.join()
+    p1.join()
+
+    # -------------------------------------------------------
+
+    p = Process(target=add_info_entry, args=(logger2,))
+    p0 = Process(target=add_debug_entry, args=(logger2,))
     p1 = Process(target=add_warning_entry, args=(logger,))
     p1.start()
     p0.start()
@@ -33,26 +53,6 @@ if __name__ == '__main__':
     p0.join()
     p1.join()
 
+    logger2.stop()
     logger.stop()
 
-    # -------------------------------------------------------
-
-    logger2 = Logger(
-        'log2.txt', 
-        listener_level=Logger.WARNING,
-        format_str='%(levelname)-8s %(asctime)s %(name)s %(message)s'
-    )
-    logger2.start()
-    
-    p = Process(target=add_info_entry, args=(logger2,))
-    p0 = Process(target=add_debug_entry, args=(logger2,))
-    p1 = Process(target=add_warning_entry, args=(logger2,))
-    p1.start()
-    p0.start()
-    p.start()
-    p.join()
-    p0.join()
-    p1.join()
-    p0.join()
-
-    logger2.stop()
