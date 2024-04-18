@@ -2,6 +2,7 @@ import logging
 import logging.handlers
 from multiprocessing import Process, Queue, Event
 from queue import Empty
+import time
 
 class Logger(Process):
     '''
@@ -77,10 +78,14 @@ class Logger(Process):
                 logger.handle(record)
             except Empty: # should I sleep to avoid CPU usage ?
                 pass
-        print('Logger exiting...')
 
     def stop(self) -> None:
         '''
         Stops listener
         '''
+
+        # process remaining events on the queue
+        while not self.queue.empty():
+            time.sleep(0.1)
+
         self.stop_evt.set()
