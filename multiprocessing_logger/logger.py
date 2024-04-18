@@ -85,8 +85,7 @@ class Logger(Process):
         '''
 
         # process remaining events on the queue
-        if not self.queue.empty():
-            print('The logger queue contains unprocessed messages. Closing anyways')
-            self.queue.close()
+        while not self.queue.empty():
+            time.sleep(0.1)
 
         self.stop_evt.set()
