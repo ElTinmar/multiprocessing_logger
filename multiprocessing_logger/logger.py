@@ -40,13 +40,13 @@ class Logger(Process):
         '''
         Configure root logger for the listener process
         '''
-        root = logging.getLogger(self.name)
-        root.setLevel(self.listener_level)
+        logger = logging.getLogger(self.name)
+        logger.setLevel(self.listener_level)
         handler = logging.FileHandler(self.filename, 'w')
         formatter = logging.Formatter(self.format_str)
         handler.setFormatter(formatter)
         handler.setLevel(self.listener_level)
-        root.addHandler(handler)
+        logger.addHandler(handler)
         
     def configure_emitter(self, level = logging.DEBUG) -> None:
         '''
@@ -55,9 +55,9 @@ class Logger(Process):
         '''
         handler = logging.handlers.QueueHandler(self.queue)
         handler.setLevel(level)
-        root = logging.getLogger(self.name)
-        root.addHandler(handler)
-        root.setLevel(level)
+        logger = logging.getLogger(self.name)
+        logger.addHandler(handler)
+        logger.setLevel(level)
 
     def get_logger(self, name: str) -> logging.Logger:
         '''
