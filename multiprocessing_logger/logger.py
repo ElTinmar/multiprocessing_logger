@@ -3,6 +3,7 @@ import logging.handlers
 from multiprocessing import Process, Queue, Event
 from queue import Empty
 import time
+import os
 
 class Logger(Process):
     '''
@@ -29,6 +30,7 @@ class Logger(Process):
         super().__init__(*args, **kwargs)
         
         self.filename = filename
+        self.name, _ = os.path.splitext(self.filename)
         self.queue = Queue()
         self.stop_evt = Event()
         self.listener_level = listener_level
@@ -61,7 +63,7 @@ class Logger(Process):
         '''
         Returns logger with a specific name
         '''
-        return logging.getLogger(f'{self.filename}.{name}')
+        return logging.getLogger(f'{self.name}.{name}')
 
     def run(self) -> None:
         '''
