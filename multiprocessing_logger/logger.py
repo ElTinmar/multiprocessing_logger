@@ -77,6 +77,7 @@ class Logger(Process):
                 logger.handle(record)
             except Empty: # should I sleep to avoid CPU usage ?
                 pass
+        print('Logger exiting...')
 
     def stop(self) -> None:
         '''
