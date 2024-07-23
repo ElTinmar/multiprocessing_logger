@@ -85,9 +85,4 @@ class Logger:
         '''
         Stops listener
         '''
-
-        # process remaining events on the queue
-        while not self.queue.empty():
-            time.sleep(0.1)
-
         self.stop_evt.set()
