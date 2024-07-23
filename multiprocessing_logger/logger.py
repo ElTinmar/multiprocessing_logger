@@ -81,7 +81,8 @@ class Logger:
             except Empty: # should I sleep to avoid CPU usage ?
                 pass
         logger = logging.getLogger(self.name)
-        logger.handlers.clear()
+        for h in logger.handlers:
+            h.close()
 
     def stop(self) -> None:
         '''
