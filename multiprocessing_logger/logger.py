@@ -1,11 +1,11 @@
 import logging
 import logging.handlers
-from multiprocessing import Process, Queue, Event
+from multiprocessing import Queue, Event
 from queue import Empty
 import time
 import os
 
-class Logger(Process):
+class Logger:
     '''
     Simple multiprocessing logger class to handle logging from multiple processes to the same 
     log file using a multiprocessing Queue. 
@@ -67,7 +67,7 @@ class Logger(Process):
 
     def run(self) -> None:
         '''
-        Listener runs in its own process
+        Listener need to be run in its own process
         '''
 
         self.configure_listener()
