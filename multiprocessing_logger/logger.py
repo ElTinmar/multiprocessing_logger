@@ -71,15 +71,16 @@ class Logger:
         '''
 
         self.configure_listener()
-        logger = logging.getLogger(record.name)
         while not self.stop_evt.is_set():
             try:
                 record = self.queue.get_nowait()
                 if record is None:
                     break
+                logger = logging.getLogger(record.name)
                 logger.handle(record)
             except Empty: # should I sleep to avoid CPU usage ?
                 pass
+        logger = logging.getLogger(self.name)
         logger.handlers.clear()
 
     def stop(self) -> None:
