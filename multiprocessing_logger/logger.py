@@ -69,8 +69,9 @@ class Logger:
         '''
         Listener need to be run in its own process
         '''
-
+        self.stop_evt.clear()
         self.configure_listener()
+        
         while not self.stop_evt.is_set():
             try:
                 record = self.queue.get_nowait()
@@ -80,6 +81,7 @@ class Logger:
                 logger.handle(record)
             except Empty: # should I sleep to avoid CPU usage ?
                 pass
+
         logger = logging.getLogger(self.name)
         for h in logger.handlers:
             h.flush()
