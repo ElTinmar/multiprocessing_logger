@@ -82,7 +82,9 @@ class Logger:
                 pass
         logger = logging.getLogger(self.name)
         for h in logger.handlers:
+            h.flush()
             h.close()
+            logger.removeHandler(h)
 
     def stop(self) -> None:
         '''
