@@ -23,7 +23,7 @@ class Logger(Process):
             self, 
             filename: str = 'log.txt', 
             listener_level = logging.DEBUG,
-            format_str: str = '%(asctime)s %(processName)-10s %(name)s %(levelname)-8s %(message)s',
+            format_str: str = '%(asctime)s %(processName)-10s %(process)-10d %(name)s %(levelname)-8s %(message)s',
             *args, **kwargs
         ) -> None:
         
