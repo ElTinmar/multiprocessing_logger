@@ -24,6 +24,7 @@ class Logger:
             filename: str = 'log.txt', 
             listener_level = logging.DEBUG,
             format_str: str = '%(asctime)s %(processName)-10s %(process)-10d %(name)s %(levelname)-8s %(message)s',
+            maxsize: int = 0,
             *args, **kwargs
         ) -> None:
         
@@ -31,7 +32,7 @@ class Logger:
         
         self.filename = filename
         self.name, _ = os.path.splitext(self.filename)
-        self.queue = Queue()
+        self.queue = Queue(maxsize)
         self.stop_evt = Event()
         self.listener_level = listener_level
         self.format_str = format_str
