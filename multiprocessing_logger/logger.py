@@ -38,6 +38,9 @@ class Logger:
         self.format_str = format_str
         self.stream = None
 
+    def get_queue(self):
+        return self.queue
+
     def configure_listener(self) -> None:
         '''
         Configure root logger for the listener process
