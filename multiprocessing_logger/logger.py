@@ -4,6 +4,7 @@ from multiprocessing import Queue, Event
 from queue import Empty
 import io
 import os
+from typing import Optional 
 
 class Logger:
     '''
@@ -24,7 +25,7 @@ class Logger:
             filename: str = 'log.txt', 
             listener_level = logging.DEBUG,
             format_str: str = '%(asctime)s %(processName)-10s %(process)-10d %(name)s %(levelname)-8s %(message)s',
-            maxsize: int = 0,
+            queue = Queue(),
             *args, **kwargs
         ) -> None:
         
@@ -32,14 +33,11 @@ class Logger:
         
         self.filename = filename
         self.name, _ = os.path.splitext(self.filename)
-        self.queue = Queue(maxsize)
+        self.queue = queue
         self.stop_evt = Event()
         self.listener_level = listener_level
         self.format_str = format_str
         self.stream = None
-
-    def get_queue(self):
-        return self.queue
 
     def configure_listener(self) -> None:
         '''
