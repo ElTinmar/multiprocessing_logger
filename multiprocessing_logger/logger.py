@@ -2,7 +2,7 @@ import logging
 import logging.handlers
 from multiprocessing import Queue, Event
 from queue import Empty
-import time
+import io
 import os
 
 class Logger:
@@ -35,6 +35,7 @@ class Logger:
         self.stop_evt = Event()
         self.listener_level = listener_level
         self.format_str = format_str
+        self.stream = None
 
     def configure_listener(self) -> None:
         '''
@@ -42,7 +43,8 @@ class Logger:
         '''
         logger = logging.getLogger(self.name)
         logger.setLevel(self.listener_level)
-        handler = logging.FileHandler(self.filename, 'w')
+        self.stream = io.open(self.filename, 'w', buffering=1024*1024)
+        handler = logging.StreamHandler(self.stream)
         formatter = logging.Formatter(self.format_str)
         handler.setFormatter(formatter)
         handler.setLevel(self.listener_level)
@@ -87,6 +89,11 @@ class Logger:
             h.flush()
             h.close()
             logger.removeHandler(h)
+        
+        if self.stream is not None:
+            self.stream.flush()
+            self.stream.close()
+            self.stream = None
 
     def stop(self) -> None:
         '''
