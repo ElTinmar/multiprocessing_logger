@@ -5,6 +5,7 @@ from queue import Empty
 import io
 import os
 from typing import Optional
+from pathlib import Path
 
 class Logger:
     '''
@@ -22,7 +23,7 @@ class Logger:
 
     def __init__(
             self, 
-            filename: str = 'log.txt', 
+            filename: str | Path = Path('log.txt'), 
             listener_level = logging.DEBUG,
             format_str: str = '%(asctime)s %(processName)-10s %(process)-10d %(name)s %(levelname)-8s %(message)s',
             queue: Optional[Queue] = None,
@@ -31,8 +32,8 @@ class Logger:
         
         super().__init__(*args, **kwargs)
         
-        self.filename = filename
-        self.name, _ = os.path.splitext(self.filename)
+        self.filename = Path(filename)
+        self.name, _ = os.path.splitext(filename)
         
         self.queue = queue
         if queue is None:
@@ -49,6 +50,7 @@ class Logger:
         '''
         logger = logging.getLogger(self.name)
         logger.setLevel(self.listener_level)
+        self.filename.parent.mkdir(parents=True, exist_ok=True)
         self.stream = io.open(self.filename, 'w', buffering=1024*1024)
         handler = logging.StreamHandler(self.stream)
         formatter = logging.Formatter(self.format_str)
